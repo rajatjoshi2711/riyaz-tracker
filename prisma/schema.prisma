@@ -1,0 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum RiyazType {
+  AALAP
+  JOD
+  TAAL_VISTAR
+  SONGS
+}
+
+model User {
+  id           String         @id @default(cuid())
+  name         String
+  email        String         @unique
+  passwordHash String
+  createdAt    DateTime       @default(now())
+  sessions     RiyazSession[]
+  raagsAdded   Raag[]
+}
+
+model Raag {
+  id              String         @id @default(cuid())
+  name            String
+  normalizedName  String         @unique
+  createdById     String
+  createdBy       User           @relation(fields: [createdById], references: [id])
+  createdAt       DateTime       @default(now())
+  sessions        RiyazSession[]
+}
+
+model RiyazSession {
+  id              String      @id @default(cuid())
+  userId          String
+  user            User        @relation(fields: [userId], references: [id])
+  raagId          String
+  raag            Raag        @relation(fields: [raagId], references: [id])
+  practiceDate    DateTime    @db.Date
+  durationMinutes Int?
+  types           RiyazType[]
+  createdAt       DateTime    @default(now())
+
+  @@index([userId, practiceDate])
+}
