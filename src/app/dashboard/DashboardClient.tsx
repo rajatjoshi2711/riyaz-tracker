@@ -25,10 +25,10 @@ export default function DashboardClient({ userName, streak, days, recentSessions
 
   return (
     <main className="ef-container-product flex flex-col gap-6 py-12">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="ef-eyebrow mb-1">Riyaz tracker</p>
-          <h1 className="ef-page">Welcome back, {userName}</h1>
+          <h1 className="ef-page break-words">Welcome back, {userName}</h1>
         </div>
         <div className="flex items-center gap-3">
           <Link href="/history" className="ef-btn ef-btn-secondary">

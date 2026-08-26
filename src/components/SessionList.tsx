@@ -42,17 +42,20 @@ export default function SessionList({ sessions }: { sessions: RiyazSession[] }) 
   return (
     <ul className="flex flex-col gap-2">
       {sessions.map((session) => (
-        <li key={session.id} className="ef-card flex items-center justify-between gap-4">
-          <div>
-            <p className="ef-subhead">{session.raag.name}</p>
+        <li
+          key={session.id}
+          className="ef-card min-w-0 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <div className="min-w-0">
+            <p className="ef-subhead break-words">{session.raag.name}</p>
             <p className="ef-caption">
               {formatDate(session.practiceDate)}
               {session.durationMinutes ? ` · ${session.durationMinutes} min` : ""}
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center justify-between gap-3 sm:justify-end">
             {session.types.length > 0 && (
-              <div className="flex flex-wrap justify-end gap-1">
+              <div className="flex flex-wrap gap-1">
                 {session.types.map((t) => (
                   <span key={t} className="ef-badge ef-badge-neutral">
                     {typeLabel.get(t) ?? t}
@@ -65,7 +68,7 @@ export default function SessionList({ sessions }: { sessions: RiyazSession[] }) 
               onClick={() => handleDelete(session)}
               disabled={deletingId === session.id}
               aria-label="Delete session"
-              className="rounded-[var(--radius-button)] p-2 text-[var(--neutral-400)] transition hover:bg-[var(--danger-soft)] hover:text-[var(--danger)] disabled:opacity-50"
+              className="shrink-0 rounded-[var(--radius-button)] p-2 text-[var(--neutral-400)] transition hover:bg-[var(--danger-soft)] hover:text-[var(--danger)] disabled:opacity-50"
             >
               <Trash2 size={16} strokeWidth={1.5} />
             </button>

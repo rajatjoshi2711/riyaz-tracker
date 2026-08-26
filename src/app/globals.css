@@ -116,12 +116,26 @@
   --max-product: 1280px;
 }
 
+/* --- Mobile type scale --- */
+@media (max-width: 640px) {
+  :root {
+    --fs-hero: 40px;
+    --lh-hero: 1.1;
+    --fs-section: 32px;
+    --fs-page: 26px;
+    --lh-page: 1.2;
+    --fs-h3: 20px;
+    --fs-lead: 17px;
+  }
+}
+
 body {
   font-family: var(--font-body-family);
   font-size: var(--fs-body);
   line-height: var(--lh-body);
   color: var(--text-primary);
   background: var(--bg-subtle);
+  overflow-x: hidden;
 }
 
 .ef-hero {
