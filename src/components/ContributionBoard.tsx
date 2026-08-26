@@ -1,4 +1,10 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import type { CalendarDay } from "@/lib/apiClient";
+
+const CELL_SIZE = 12; // px, matches h-3 w-3
+const GAP = 4; // px, matches gap-1
 
 function levelColor(day: CalendarDay) {
   if (!day.practiced) return "var(--neutral-100)";
@@ -17,20 +23,43 @@ function formatDate(dateStr: string) {
 }
 
 export default function ContributionBoard({ days }: { days: CalendarDay[] }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [visibleWeeks, setVisibleWeeks] = useState(53);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    function update(width: number) {
+      setVisibleWeeks(Math.max(1, Math.floor((width + GAP) / (CELL_SIZE + GAP))));
+    }
+
+    update(el.clientWidth);
+    const observer = new ResizeObserver((entries) => update(entries[0].contentRect.width));
+    observer.observe(el);
+    const onWindowResize = () => update(el.clientWidth);
+    window.addEventListener("resize", onWindowResize);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", onWindowResize);
+    };
+  }, []);
+
   if (days.length === 0) return null;
 
   const firstDayOfWeek = new Date(`${days[0].date}T00:00:00Z`).getUTCDay();
   const padded: (CalendarDay | null)[] = [...Array(firstDayOfWeek).fill(null), ...days];
 
-  const weeks: (CalendarDay | null)[][] = [];
+  const allWeeks: (CalendarDay | null)[][] = [];
   for (let i = 0; i < padded.length; i += 7) {
-    weeks.push(padded.slice(i, i + 7));
+    allWeeks.push(padded.slice(i, i + 7));
   }
+  const weeks = allWeeks.slice(-visibleWeeks);
 
   return (
     <div className="ef-card">
       <p className="ef-subhead mb-4">Practice history</p>
-      <div className="flex gap-1 overflow-x-auto pb-1">
+      <div ref={containerRef} className="flex gap-1 overflow-hidden pb-1">
         {weeks.map((week, weekIndex) => (
           <div key={weekIndex} className="flex flex-col gap-1">
             {week.map((day, dayIndex) =>
