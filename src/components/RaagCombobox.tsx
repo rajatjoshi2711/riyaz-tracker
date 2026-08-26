@@ -50,6 +50,12 @@ export default function RaagCombobox({ value, onChange }: Props) {
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onFocus={() => setOpen(true)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              setOpen(false);
+            }
+          }}
           placeholder="Search or add a raag"
           autoComplete="off"
           required
