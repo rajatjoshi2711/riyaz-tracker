@@ -90,6 +90,13 @@ export async function getUserSessions(
   return { sessions: sessions.map(serializeSession), total, page, pageSize };
 }
 
+export async function deleteRiyazSession(userId: string, sessionId: string) {
+  const result = await prisma.riyazSession.deleteMany({
+    where: { id: sessionId, userId },
+  });
+  return result.count > 0;
+}
+
 export function searchRaagsByName(search: string) {
   const normalized = search.trim().toLowerCase();
   return prisma.raag.findMany({

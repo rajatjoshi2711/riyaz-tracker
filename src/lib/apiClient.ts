@@ -2,9 +2,10 @@ export type PublicUser = { id: string; name: string; email: string };
 
 export type Raag = { id: string; name: string };
 
-export type RiyazType = "AALAP" | "JOD" | "TAAL_VISTAR" | "SONGS";
+export type RiyazType = "ALANKAR" | "AALAP" | "JOD" | "TAAL_VISTAR" | "SONGS";
 
 export const RIYAZ_TYPES: { value: RiyazType; label: string }[] = [
+  { value: "ALANKAR", label: "Alankar" },
   { value: "AALAP", label: "Aalap" },
   { value: "JOD", label: "Jod" },
   { value: "TAAL_VISTAR", label: "Taal vistar" },
@@ -91,6 +92,10 @@ export function listSessions(params: { page?: number; pageSize?: number } = {}) 
   return request<{ sessions: RiyazSession[]; total: number; page: number; pageSize: number }>(
     `/api/sessions${qs ? `?${qs}` : ""}`,
   );
+}
+
+export function deleteSession(id: string) {
+  return request<{ ok: true }>(`/api/sessions/${id}`, { method: "DELETE" });
 }
 
 export function getStreak() {
