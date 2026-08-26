@@ -46,6 +46,7 @@ export default function RaagCombobox({ value, onChange }: Props) {
         <input
           id="raagName"
           className="ef-input pl-9"
+          style={{ paddingLeft: 36 }}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onFocus={() => setOpen(true)}
