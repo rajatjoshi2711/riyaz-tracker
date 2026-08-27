@@ -8,6 +8,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
 
-  const raags = await getTopPracticedRaags(10);
+  const raags = await getTopPracticedRaags(user.id, 10);
   return NextResponse.json({ raags });
 }

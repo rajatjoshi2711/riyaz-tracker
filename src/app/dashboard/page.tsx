@@ -16,7 +16,7 @@ export default async function DashboardPage() {
     getUserStreak(user.id),
     getUserCalendar(user.id),
     getUserSessions(user.id, 1, 5),
-    getTopPracticedRaags(10),
+    getTopPracticedRaags(user.id, 10),
   ]);
 
   return (

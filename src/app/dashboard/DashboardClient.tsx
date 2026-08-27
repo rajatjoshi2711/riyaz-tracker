@@ -50,8 +50,8 @@ export default function DashboardClient({ userName, streak, days, recentSessions
       </div>
 
       <div className="ef-card">
-        <p className="ef-subhead mb-1">Most practiced raags</p>
-        <p className="ef-caption mb-4">Across everyone on Riyaz tracker</p>
+        <p className="ef-subhead mb-1">Your most practiced raags</p>
+        <p className="ef-caption mb-4">Based on your own logged sessions</p>
         <TopRaagsBeeswarm raags={topRaags} />
       </div>
 

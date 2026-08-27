@@ -97,9 +97,10 @@ export async function deleteRiyazSession(userId: string, sessionId: string) {
   return result.count > 0;
 }
 
-export async function getTopPracticedRaags(limit = 10) {
+export async function getTopPracticedRaags(userId: string, limit = 10) {
   const grouped = await prisma.riyazSession.groupBy({
     by: ["raagId"],
+    where: { userId },
     _count: { _all: true },
     orderBy: { _count: { raagId: "desc" } },
     take: limit,
