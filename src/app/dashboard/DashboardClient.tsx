@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { logout, type CalendarDay, type RiyazSession, type StreakResult, type TopRaag } from "@/lib/apiClient";
 import StreakCard from "@/components/StreakCard";
@@ -8,6 +7,7 @@ import SessionForm from "@/components/SessionForm";
 import ContributionBoard from "@/components/ContributionBoard";
 import SessionList from "@/components/SessionList";
 import TopRaagsBeeswarm from "@/components/TopRaagsBeeswarm";
+import NavMenu from "@/components/NavMenu";
 
 type Props = {
   userName: string;
@@ -28,27 +28,19 @@ export default function DashboardClient({ userName, userRole, streak, days, rece
 
   return (
     <main className="ef-container-product flex w-full min-w-0 flex-col gap-6 py-12">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-w-0">
           <p className="ef-eyebrow mb-1">Riyaz tracker</p>
-          <h1 className="ef-page break-words">Welcome back, {userName.split(" ")[0]}</h1>
+          <h1 className="ef-page truncate">Welcome back, {userName.split(" ")[0]}</h1>
         </div>
-        <div className="flex items-center gap-3">
-          {userRole === "ADMIN" && (
-            <Link href="/admin/users" className="ef-btn ef-btn-secondary">
-              Admin
-            </Link>
-          )}
-          <Link href="/friends" className="ef-btn ef-btn-secondary">
-            Find friends
-          </Link>
-          <Link href="/history" className="ef-btn ef-btn-secondary">
-            View history
-          </Link>
-          <button className="ef-btn ef-btn-text" onClick={handleLogout}>
-            Sign out
-          </button>
-        </div>
+        <NavMenu
+          items={[
+            ...(userRole === "ADMIN" ? [{ label: "Admin", href: "/admin/users" }] : []),
+            { label: "Find friends", href: "/friends" },
+            { label: "View history", href: "/history" },
+            { label: "Sign out", onClick: handleLogout },
+          ]}
+        />
       </div>
 
       <StreakCard streak={streak} />
