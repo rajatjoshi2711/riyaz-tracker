@@ -9,6 +9,13 @@ export function getUser(userId: string) {
   return prisma.user.findUnique({ where: { id: userId } });
 }
 
+export function getAllUsers() {
+  return prisma.user.findMany({
+    select: { id: true, name: true, email: true, role: true, createdAt: true },
+    orderBy: { createdAt: "asc" },
+  });
+}
+
 export async function getUserStreak(userId: string) {
   const sessions = await prisma.riyazSession.findMany({
     where: { userId },

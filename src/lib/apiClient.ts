@@ -1,4 +1,4 @@
-export type PublicUser = { id: string; name: string; email: string };
+export type PublicUser = { id: string; name: string; email: string; role: "ADMIN" | "USER" };
 
 export type Raag = { id: string; name: string };
 

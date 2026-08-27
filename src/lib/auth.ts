@@ -23,6 +23,6 @@ export async function getUserFromRequest(req: NextRequest) {
   return prisma.user.findUnique({ where: { id: payload.userId } });
 }
 
-export function toPublicUser(user: { id: string; name: string; email: string }) {
-  return { id: user.id, name: user.name, email: user.email };
+export function toPublicUser(user: { id: string; name: string; email: string; role: "ADMIN" | "USER" }) {
+  return { id: user.id, name: user.name, email: user.email, role: user.role };
 }

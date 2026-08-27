@@ -33,7 +33,7 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center px-6">
+    <main className="flex min-h-screen w-full min-w-0 items-center justify-center px-6">
       <div className="ef-card ef-rise w-full max-w-md">
         <p className="ef-eyebrow mb-2">Riyaz tracker</p>
         <h1 className="ef-page mb-6">Create your account</h1>

@@ -22,6 +22,7 @@ export default async function DashboardPage() {
   return (
     <DashboardClient
       userName={user.name}
+      userRole={user.role}
       streak={streak}
       days={calendar.days}
       recentSessions={sessionsResult.sessions}

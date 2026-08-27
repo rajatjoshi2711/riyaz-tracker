@@ -24,7 +24,7 @@ export default async function HistoryPage({
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
   return (
-    <main className="ef-container-product flex flex-col gap-6 py-12">
+    <main className="ef-container-product flex w-full min-w-0 flex-col gap-6 py-12">
       <div>
         <Link href="/dashboard" className="ef-btn-text inline-flex items-center gap-1">
           <ArrowLeft size={16} strokeWidth={1.5} />

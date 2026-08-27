@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AUTH_COOKIE_NAME, verifyToken } from "@/lib/jwt";
 
-const PROTECTED_PATHS = ["/dashboard", "/history"];
+const PROTECTED_PATHS = ["/dashboard", "/history", "/admin"];
 
 export function middleware(req: NextRequest) {
   const isProtected = PROTECTED_PATHS.some((path) => req.nextUrl.pathname.startsWith(path));
@@ -21,6 +21,6 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/history/:path*"],
+  matcher: ["/dashboard/:path*", "/history/:path*", "/admin/:path*"],
   runtime: "nodejs",
 };

@@ -3,7 +3,7 @@ import { Flame } from "lucide-react";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-1 items-center justify-center px-6">
+    <main className="flex min-h-screen w-full min-w-0 flex-1 items-center justify-center px-6">
       <div className="ef-rise flex max-w-lg flex-col items-center gap-6 text-center">
         <div className="flex items-center gap-2 text-[var(--blue-500)]">
           <Flame size={32} strokeWidth={1.5} />

@@ -11,13 +11,14 @@ import TopRaagsBeeswarm from "@/components/TopRaagsBeeswarm";
 
 type Props = {
   userName: string;
+  userRole: "ADMIN" | "USER";
   streak: StreakResult;
   days: CalendarDay[];
   recentSessions: RiyazSession[];
   topRaags: TopRaag[];
 };
 
-export default function DashboardClient({ userName, streak, days, recentSessions, topRaags }: Props) {
+export default function DashboardClient({ userName, userRole, streak, days, recentSessions, topRaags }: Props) {
   const router = useRouter();
 
   async function handleLogout() {
@@ -26,13 +27,18 @@ export default function DashboardClient({ userName, streak, days, recentSessions
   }
 
   return (
-    <main className="ef-container-product flex flex-col gap-6 py-12">
+    <main className="ef-container-product flex w-full min-w-0 flex-col gap-6 py-12">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="ef-eyebrow mb-1">Riyaz tracker</p>
           <h1 className="ef-page break-words">Welcome back, {userName}</h1>
         </div>
         <div className="flex items-center gap-3">
+          {userRole === "ADMIN" && (
+            <Link href="/admin/users" className="ef-btn ef-btn-secondary">
+              Admin
+            </Link>
+          )}
           <Link href="/history" className="ef-btn ef-btn-secondary">
             View history
           </Link>
