@@ -206,6 +206,13 @@ export async function unfollowUser(followerId: string, followingId: string) {
   return result.count > 0;
 }
 
+export async function isFollowing(followerId: string, followingId: string) {
+  const follow = await prisma.follow.findUnique({
+    where: { followerId_followingId: { followerId, followingId } },
+  });
+  return follow !== null;
+}
+
 export async function getFollowingTimeline(userId: string, limit = 30) {
   const following = await prisma.follow.findMany({
     where: { followerId: userId },

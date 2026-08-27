@@ -211,8 +211,10 @@ export default function FriendsClient({
                   <div className="min-w-0">
                     <p className="ef-body flex flex-wrap items-center gap-2">
                       <span>
-                        <span className="font-semibold">{item.user.name}</span> practiced{" "}
-                        <span className="font-semibold">{item.raag.name}</span>
+                        <Link href={`/profile/${item.user.id}`} className="font-semibold hover:underline">
+                          {item.user.name}
+                        </Link>{" "}
+                        practiced <span className="font-semibold">{item.raag.name}</span>
                       </span>
                       <StreakBadge streak={item.user.currentStreak} />
                     </p>
