@@ -39,6 +39,26 @@ export type CalendarDay = {
   totalMinutes: number;
 };
 
+export type FriendUser = {
+  id: string;
+  name: string;
+  email: string;
+  sessionCount: number;
+  isFollowing: boolean;
+};
+
+export type TimelineItem = {
+  id: string;
+  user: { id: string; name: string };
+  raag: { id: string; name: string };
+  practiceDate: string;
+  durationMinutes: number | null;
+  types: RiyazType[];
+  createdAt: string;
+  likeCount: number;
+  likedByMe: boolean;
+};
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(path, {
     ...init,
@@ -114,4 +134,28 @@ export function getTopRaags() {
 
 export function getCalendar() {
   return request<{ from: string; to: string; days: CalendarDay[] }>("/api/calendar");
+}
+
+export function getFriendUsers() {
+  return request<{ users: FriendUser[] }>("/api/friends/users");
+}
+
+export function followUser(userId: string) {
+  return request<{ ok: true }>(`/api/friends/${userId}`, { method: "POST" });
+}
+
+export function unfollowUser(userId: string) {
+  return request<{ ok: true }>(`/api/friends/${userId}`, { method: "DELETE" });
+}
+
+export function getTimeline() {
+  return request<{ items: TimelineItem[] }>("/api/timeline");
+}
+
+export function likeTimelineItem(sessionId: string) {
+  return request<{ ok: true }>(`/api/timeline/${sessionId}/like`, { method: "POST" });
+}
+
+export function unlikeTimelineItem(sessionId: string) {
+  return request<{ ok: true }>(`/api/timeline/${sessionId}/like`, { method: "DELETE" });
 }

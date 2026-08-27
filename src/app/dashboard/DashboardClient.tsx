@@ -39,6 +39,9 @@ export default function DashboardClient({ userName, userRole, streak, days, rece
               Admin
             </Link>
           )}
+          <Link href="/friends" className="ef-btn ef-btn-secondary">
+            Find friends
+          </Link>
           <Link href="/history" className="ef-btn ef-btn-secondary">
             View history
           </Link>

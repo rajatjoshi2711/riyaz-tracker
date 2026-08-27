@@ -138,6 +138,90 @@ export function searchRaagsByName(search: string) {
   });
 }
 
+export async function getUsersForFriends(currentUserId: string) {
+  const users = await prisma.user.findMany({
+    where: { id: { not: currentUserId } },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      _count: { select: { sessions: true } },
+      followers: { where: { followerId: currentUserId }, select: { id: true } },
+    },
+    orderBy: { sessions: { _count: "desc" } },
+  });
+
+  return users.map((u) => ({
+    id: u.id,
+    name: u.name,
+    email: u.email,
+    sessionCount: u._count.sessions,
+    isFollowing: u.followers.length > 0,
+  }));
+}
+
+export async function followUser(followerId: string, followingId: string) {
+  if (followerId === followingId) {
+    throw new Error("You can't follow yourself");
+  }
+  return prisma.follow.upsert({
+    where: { followerId_followingId: { followerId, followingId } },
+    create: { followerId, followingId },
+    update: {},
+  });
+}
+
+export async function unfollowUser(followerId: string, followingId: string) {
+  const result = await prisma.follow.deleteMany({ where: { followerId, followingId } });
+  return result.count > 0;
+}
+
+export async function getFollowingTimeline(userId: string, limit = 30) {
+  const following = await prisma.follow.findMany({
+    where: { followerId: userId },
+    select: { followingId: true },
+  });
+  const followingIds = following.map((f) => f.followingId);
+  if (followingIds.length === 0) return [];
+
+  const sessions = await prisma.riyazSession.findMany({
+    where: { userId: { in: followingIds } },
+    orderBy: { createdAt: "desc" },
+    take: limit,
+    include: {
+      user: { select: { id: true, name: true } },
+      raag: { select: { id: true, name: true } },
+      likes: { where: { userId }, select: { id: true } },
+      _count: { select: { likes: true } },
+    },
+  });
+
+  return sessions.map((s) => ({
+    id: s.id,
+    user: s.user,
+    raag: s.raag,
+    practiceDate: toDateOnly(s.practiceDate),
+    durationMinutes: s.durationMinutes,
+    types: s.types,
+    createdAt: s.createdAt,
+    likeCount: s._count.likes,
+    likedByMe: s.likes.length > 0,
+  }));
+}
+
+export async function likeSession(userId: string, sessionId: string) {
+  return prisma.like.upsert({
+    where: { userId_sessionId: { userId, sessionId } },
+    create: { userId, sessionId },
+    update: {},
+  });
+}
+
+export async function unlikeSession(userId: string, sessionId: string) {
+  const result = await prisma.like.deleteMany({ where: { userId, sessionId } });
+  return result.count > 0;
+}
+
 export async function logRiyazSession(
   userId: string,
   input: {
