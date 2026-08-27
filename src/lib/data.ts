@@ -97,6 +97,29 @@ export async function deleteRiyazSession(userId: string, sessionId: string) {
   return result.count > 0;
 }
 
+export async function getTopPracticedRaags(limit = 10) {
+  const grouped = await prisma.riyazSession.groupBy({
+    by: ["raagId"],
+    _count: { _all: true },
+    orderBy: { _count: { raagId: "desc" } },
+    take: limit,
+  });
+
+  if (grouped.length === 0) return [];
+
+  const raags = await prisma.raag.findMany({
+    where: { id: { in: grouped.map((g) => g.raagId) } },
+    select: { id: true, name: true },
+  });
+  const nameById = new Map(raags.map((r) => [r.id, r.name]));
+
+  return grouped.map((g) => ({
+    raagId: g.raagId,
+    name: nameById.get(g.raagId) ?? "Unknown",
+    count: g._count._all,
+  }));
+}
+
 export function searchRaagsByName(search: string) {
   const normalized = search.trim().toLowerCase();
   return prisma.raag.findMany({

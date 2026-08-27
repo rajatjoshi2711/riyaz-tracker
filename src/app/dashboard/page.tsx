@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { AUTH_COOKIE_NAME, verifyToken } from "@/lib/jwt";
-import { getUser, getUserStreak, getUserCalendar, getUserSessions } from "@/lib/data";
+import { getUser, getUserStreak, getUserCalendar, getUserSessions, getTopPracticedRaags } from "@/lib/data";
 import DashboardClient from "@/app/dashboard/DashboardClient";
 
 export default async function DashboardPage() {
@@ -12,10 +12,11 @@ export default async function DashboardPage() {
   const user = await getUser(payload.userId);
   if (!user) redirect("/login");
 
-  const [streak, calendar, sessionsResult] = await Promise.all([
+  const [streak, calendar, sessionsResult, topRaags] = await Promise.all([
     getUserStreak(user.id),
     getUserCalendar(user.id),
     getUserSessions(user.id, 1, 5),
+    getTopPracticedRaags(10),
   ]);
 
   return (
@@ -24,6 +25,7 @@ export default async function DashboardPage() {
       streak={streak}
       days={calendar.days}
       recentSessions={sessionsResult.sessions}
+      topRaags={topRaags}
     />
   );
 }

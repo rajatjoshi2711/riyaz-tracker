@@ -26,6 +26,12 @@ export type StreakResult = {
   lastPracticeDate: string | null;
 };
 
+export type TopRaag = {
+  raagId: string;
+  name: string;
+  count: number;
+};
+
 export type CalendarDay = {
   date: string;
   practiced: boolean;
@@ -100,6 +106,10 @@ export function deleteSession(id: string) {
 
 export function getStreak() {
   return request<StreakResult>("/api/streaks/me");
+}
+
+export function getTopRaags() {
+  return request<{ raags: TopRaag[] }>("/api/raags/top");
 }
 
 export function getCalendar() {

@@ -2,20 +2,22 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { logout, type CalendarDay, type RiyazSession, type StreakResult } from "@/lib/apiClient";
+import { logout, type CalendarDay, type RiyazSession, type StreakResult, type TopRaag } from "@/lib/apiClient";
 import StreakCard from "@/components/StreakCard";
 import SessionForm from "@/components/SessionForm";
 import ContributionBoard from "@/components/ContributionBoard";
 import SessionList from "@/components/SessionList";
+import TopRaagsBeeswarm from "@/components/TopRaagsBeeswarm";
 
 type Props = {
   userName: string;
   streak: StreakResult;
   days: CalendarDay[];
   recentSessions: RiyazSession[];
+  topRaags: TopRaag[];
 };
 
-export default function DashboardClient({ userName, streak, days, recentSessions }: Props) {
+export default function DashboardClient({ userName, streak, days, recentSessions, topRaags }: Props) {
   const router = useRouter();
 
   async function handleLogout() {
@@ -45,6 +47,12 @@ export default function DashboardClient({ userName, streak, days, recentSessions
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <SessionForm onLogged={() => router.refresh()} />
         <ContributionBoard days={days} />
+      </div>
+
+      <div className="ef-card">
+        <p className="ef-subhead mb-1">Most practiced raags</p>
+        <p className="ef-caption mb-4">Across everyone on Riyaz tracker</p>
+        <TopRaagsBeeswarm raags={topRaags} />
       </div>
 
       <div>
