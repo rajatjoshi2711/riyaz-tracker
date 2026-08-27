@@ -31,7 +31,7 @@ export default function DashboardClient({ userName, userRole, streak, days, rece
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="ef-eyebrow mb-1">Riyaz tracker</p>
-          <h1 className="ef-page break-words">Welcome back, {userName}</h1>
+          <h1 className="ef-page break-words">Welcome back, {userName.split(" ")[0]}</h1>
         </div>
         <div className="flex items-center gap-3">
           {userRole === "ADMIN" && (
