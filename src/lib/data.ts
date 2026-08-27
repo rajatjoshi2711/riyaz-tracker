@@ -9,6 +9,13 @@ export function getUser(userId: string) {
   return prisma.user.findUnique({ where: { id: userId } });
 }
 
+export function incrementFindFriendsBannerViews(userId: string) {
+  return prisma.user.update({
+    where: { id: userId },
+    data: { findFriendsBannerViews: { increment: 1 } },
+  });
+}
+
 export function getAllUsers() {
   return prisma.user.findMany({
     select: { id: true, name: true, email: true, role: true, createdAt: true },

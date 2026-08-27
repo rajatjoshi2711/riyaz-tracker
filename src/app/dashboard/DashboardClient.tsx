@@ -8,6 +8,7 @@ import ContributionBoard from "@/components/ContributionBoard";
 import SessionList from "@/components/SessionList";
 import TopRaagsBeeswarm from "@/components/TopRaagsBeeswarm";
 import NavMenu from "@/components/NavMenu";
+import FindFriendsBanner from "@/components/FindFriendsBanner";
 
 type Props = {
   userName: string;
@@ -16,9 +17,18 @@ type Props = {
   days: CalendarDay[];
   recentSessions: RiyazSession[];
   topRaags: TopRaag[];
+  showFindFriendsBanner: boolean;
 };
 
-export default function DashboardClient({ userName, userRole, streak, days, recentSessions, topRaags }: Props) {
+export default function DashboardClient({
+  userName,
+  userRole,
+  streak,
+  days,
+  recentSessions,
+  topRaags,
+  showFindFriendsBanner,
+}: Props) {
   const router = useRouter();
 
   async function handleLogout() {
@@ -42,6 +52,8 @@ export default function DashboardClient({ userName, userRole, streak, days, rece
           ]}
         />
       </div>
+
+      {showFindFriendsBanner && <FindFriendsBanner />}
 
       <StreakCard streak={streak} />
 

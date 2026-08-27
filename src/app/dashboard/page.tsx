@@ -1,7 +1,14 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { AUTH_COOKIE_NAME, verifyToken } from "@/lib/jwt";
-import { getUser, getUserStreak, getUserCalendar, getUserSessions, getTopPracticedRaags } from "@/lib/data";
+import {
+  getUser,
+  getUserStreak,
+  getUserCalendar,
+  getUserSessions,
+  getTopPracticedRaags,
+  incrementFindFriendsBannerViews,
+} from "@/lib/data";
 import DashboardClient from "@/app/dashboard/DashboardClient";
 
 export default async function DashboardPage() {
@@ -19,6 +26,11 @@ export default async function DashboardPage() {
     getTopPracticedRaags(user.id, 10),
   ]);
 
+  const showFindFriendsBanner = user.findFriendsBannerViews < 2;
+  if (showFindFriendsBanner) {
+    await incrementFindFriendsBannerViews(user.id);
+  }
+
   return (
     <DashboardClient
       userName={user.name}
@@ -27,6 +39,7 @@ export default async function DashboardPage() {
       days={calendar.days}
       recentSessions={sessionsResult.sessions}
       topRaags={topRaags}
+      showFindFriendsBanner={showFindFriendsBanner}
     />
   );
 }
