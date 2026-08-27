@@ -44,12 +44,13 @@ export type FriendUser = {
   name: string;
   email: string;
   sessionCount: number;
+  currentStreak: number;
   isFollowing: boolean;
 };
 
 export type TimelineItem = {
   id: string;
-  user: { id: string; name: string };
+  user: { id: string; name: string; currentStreak: number };
   raag: { id: string; name: string };
   practiceDate: string;
   durationMinutes: number | null;

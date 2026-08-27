@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Heart, UserPlus, UserCheck } from "lucide-react";
+import { ArrowLeft, Flame, Heart, UserPlus, UserCheck } from "lucide-react";
 import {
   followUser,
   unfollowUser,
@@ -35,6 +35,20 @@ function timeAgo(iso: string) {
   if (hours < 24) return `${hours}h ago`;
   const days = Math.floor(hours / 24);
   return `${days}d ago`;
+}
+
+function StreakBadge({ streak }: { streak: number }) {
+  if (streak <= 0) return null;
+  return (
+    <span
+      className="ef-caption inline-flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 font-semibold"
+      style={{ backgroundColor: "var(--warning-soft)", color: "#9a6c0c" }}
+      title={`${streak} day streak`}
+    >
+      <Flame size={12} strokeWidth={2} />
+      {streak}
+    </span>
+  );
 }
 
 function FollowButton({
@@ -135,7 +149,7 @@ export default function FriendsClient({
     }
   }
 
-  const recommendations = users.filter((u) => !u.isFollowing).slice(0, 3);
+  const recommendations = users.filter((u) => !u.isFollowing);
 
   return (
     <main className="ef-container-product flex w-full min-w-0 flex-col gap-6 py-12">
@@ -162,7 +176,10 @@ export default function FriendsClient({
             {recommendations.map((u) => (
               <div key={u.id} className="ef-card flex flex-col gap-3">
                 <div className="min-w-0">
-                  <p className="ef-subhead truncate">{u.name}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="ef-subhead truncate">{u.name}</p>
+                    <StreakBadge streak={u.currentStreak} />
+                  </div>
                   <p className="ef-caption truncate">
                     {u.sessionCount} session{u.sessionCount === 1 ? "" : "s"} logged
                   </p>
@@ -175,31 +192,6 @@ export default function FriendsClient({
               </div>
             ))}
           </div>
-        )}
-      </div>
-
-      <div>
-        <p className="ef-subhead mb-3">All members</p>
-        {users.length === 0 ? (
-          <p className="ef-caption">No one else has joined yet.</p>
-        ) : (
-          <ul className="flex flex-col gap-2">
-            {users.map((u) => (
-              <li key={u.id} className="ef-card flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div className="min-w-0">
-                  <p className="ef-subhead truncate">{u.name}</p>
-                  <p className="ef-caption truncate">
-                    {u.sessionCount} session{u.sessionCount === 1 ? "" : "s"} logged
-                  </p>
-                </div>
-                <FollowButton
-                  following={u.isFollowing}
-                  pending={pendingFollow === u.id}
-                  onToggle={() => handleToggleFollow(u)}
-                />
-              </li>
-            ))}
-          </ul>
         )}
       </div>
 
@@ -217,9 +209,12 @@ export default function FriendsClient({
               <li key={item.id} className="ef-card flex flex-col gap-3">
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0">
-                    <p className="ef-body">
-                      <span className="font-semibold">{item.user.name}</span> practiced{" "}
-                      <span className="font-semibold">{item.raag.name}</span>
+                    <p className="ef-body flex flex-wrap items-center gap-2">
+                      <span>
+                        <span className="font-semibold">{item.user.name}</span> practiced{" "}
+                        <span className="font-semibold">{item.raag.name}</span>
+                      </span>
+                      <StreakBadge streak={item.user.currentStreak} />
                     </p>
                     <p className="ef-caption">
                       {formatDate(item.practiceDate)}

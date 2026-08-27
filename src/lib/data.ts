@@ -138,6 +138,26 @@ export function searchRaagsByName(search: string) {
   });
 }
 
+async function getCurrentStreaksForUsers(userIds: string[]) {
+  const result = new Map<string, number>();
+  if (userIds.length === 0) return result;
+
+  const sessions = await prisma.riyazSession.findMany({
+    where: { userId: { in: userIds } },
+    select: { userId: true, practiceDate: true },
+  });
+  const datesByUser = new Map<string, Date[]>();
+  for (const s of sessions) {
+    const dates = datesByUser.get(s.userId) ?? [];
+    dates.push(s.practiceDate);
+    datesByUser.set(s.userId, dates);
+  }
+  for (const id of userIds) {
+    result.set(id, computeStreaks(datesByUser.get(id) ?? []).currentStreak);
+  }
+  return result;
+}
+
 export async function getUsersForFriends(currentUserId: string) {
   const users = await prisma.user.findMany({
     where: { id: { not: currentUserId } },
@@ -151,11 +171,14 @@ export async function getUsersForFriends(currentUserId: string) {
     orderBy: { sessions: { _count: "desc" } },
   });
 
+  const streaks = await getCurrentStreaksForUsers(users.map((u) => u.id));
+
   return users.map((u) => ({
     id: u.id,
     name: u.name,
     email: u.email,
     sessionCount: u._count.sessions,
+    currentStreak: streaks.get(u.id) ?? 0,
     isFollowing: u.followers.length > 0,
   }));
 }
@@ -196,9 +219,11 @@ export async function getFollowingTimeline(userId: string, limit = 30) {
     },
   });
 
+  const streaks = await getCurrentStreaksForUsers(followingIds);
+
   return sessions.map((s) => ({
     id: s.id,
-    user: s.user,
+    user: { ...s.user, currentStreak: streaks.get(s.user.id) ?? 0 },
     raag: s.raag,
     practiceDate: toDateOnly(s.practiceDate),
     durationMinutes: s.durationMinutes,
